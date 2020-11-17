@@ -36,11 +36,11 @@ namespace Consumer
             {
                 while (!stoppingToken.IsCancellationRequested)
                 {
-                    _logger.LogInformation("Worker Consumer running at: {time}", DateTimeOffset.Now);
                     try
                     {
                         var result = _consumer.Consume(stoppingToken);
                         _logger.LogInformation("Result {}", result.Message.Value);
+                        _consumer.Commit(result);
                         await Task.Delay(1000, stoppingToken);
                     }
                     catch (ConsumeException e)

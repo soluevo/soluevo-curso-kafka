@@ -1,3 +1,4 @@
+using System;
 using System.Net;
 using Confluent.Kafka;
 using Microsoft.Extensions.Configuration;
@@ -19,7 +20,8 @@ namespace Consumer.Kafka
                 BootstrapServers = configuration["Kafka:Servers"],
                 GroupId = configuration["Kafka:ConsumerGroupId"],
                 ClientId = configuration["Kafka:ClientId"] + "-" + Dns.GetHostName(),
-                AutoOffsetReset = AutoOffsetReset.Earliest
+                AutoOffsetReset = AutoOffsetReset.Earliest,
+                EnableAutoCommit = Convert.ToBoolean(configuration["Kafka:EnableAutoCommit"])
             };
             
             return new ConsumerBuilder<Ignore, string>(config).Build();

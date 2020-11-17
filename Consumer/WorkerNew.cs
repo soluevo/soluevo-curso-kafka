@@ -43,7 +43,6 @@ namespace Consumer
             {
                 while (!stoppingToken.IsCancellationRequested)
                 {
-                    _logger.LogInformation("Worker-New Consumer running at: {time}", DateTimeOffset.Now);
                     try
                     {
                         var result = consumerNew.Consume(stoppingToken);
