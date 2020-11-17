@@ -23,7 +23,13 @@ namespace Consumer
             _configuration = configuration;
         }
 
-        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+        protected override Task ExecuteAsync(CancellationToken stoppingToken)
+        {
+            Task.Run(async () => await ConsumeAnima(stoppingToken), stoppingToken);
+            return Task.CompletedTask;
+        }
+
+        private async Task ConsumeAnima(CancellationToken stoppingToken)
         {
             _consumer.Subscribe(_configuration["Kafka:TopicAnima"]);
             try

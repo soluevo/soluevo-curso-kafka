@@ -20,6 +20,7 @@ namespace Consumer
                 .ConfigureServices((hostContext, services) =>
                 {
                     services.AddHostedService<Worker>();
+                    services.AddHostedService<WorkerNew>();
                     services.AddKafka(hostContext.Configuration);
                 });
     }
