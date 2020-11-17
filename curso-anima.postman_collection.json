@@ -1,0 +1,68 @@
+{
+	"info": {
+		"_postman_id": "f884d68b-6371-4d34-8c01-27adef411ad8",
+		"name": "curso-anima",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "MakePayment",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Value\": 55,\r\n    \"Description\": \"Make the first payment\",\r\n    \"SourceAccount\": \"323\",\r\n    \"TargetAccount\" : \"1211\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5001/payment/pay",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"payment",
+						"pay"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "MakePaymentRollback",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"IdPayment\": \"7a98136a-9d95-4967-a46f-9b6a6ef22d6f\",\r\n    \"ReasonRollback\" : \"Just for test\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5001/payment/rollback",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"payment",
+						"rollback"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

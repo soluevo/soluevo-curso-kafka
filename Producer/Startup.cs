@@ -10,7 +10,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Producer.Domain;
 using Producer.Kafka;
+using Producer.Service;
 
 namespace Producer
 {
@@ -27,6 +29,7 @@ namespace Producer
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddScoped<IPaymentService, PaymentService>();
             services.AddKafka(Configuration);
         }
 

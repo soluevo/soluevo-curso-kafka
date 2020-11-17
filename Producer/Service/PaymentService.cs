@@ -1,6 +1,9 @@
+using System;
 using System.Threading.Tasks;
 using Confluent.Kafka;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Producer.Cross;
 using Producer.Domain;
 
 namespace Producer.Service
@@ -10,23 +13,67 @@ namespace Producer.Service
         private readonly ILogger<IPaymentService> _logger;
         private readonly IProducer<string, Payment> _producerPayment;
         private readonly IProducer<string, RollbackPayment> _producerRollback;
+        private readonly IConfiguration _configuration;
 
         public PaymentService(ILogger<IPaymentService> logger, IProducer<string, Payment> producerPayment, 
-            IProducer<string, RollbackPayment> producerRollback)
+            IProducer<string, RollbackPayment> producerRollback, IConfiguration configuration)
         {
             _logger = logger;
             _producerPayment = producerPayment;
             _producerRollback = producerRollback;
+            _configuration = configuration;
         }
 
-        public Task<Payment> Pay(Payment payment)
+        public async Task<Notification<Payment>> Pay(Payment payment)
         {
-            throw new System.NotImplementedException();
+            _logger.LogInformation("Receiving payment ID {}, Value {}", payment.Id, payment.Value);
+            try
+            {
+                await _producerPayment.ProduceAsync(_configuration["Kafka:TopicPayment"], new Message<string, Payment>()
+                {
+                    Key = payment.Id,
+                    Value =  payment
+                });
+
+                return new Notification<Payment>
+                {
+                    Data = payment
+                };
+            }
+            catch (ProduceException<string,Payment> e)
+            {
+                _logger.LogError(e, "Can't produce to topic {}", _configuration["Kafka:TopicPayment"]);
+                return new Notification<Payment>
+                {
+                    Error = $"Can't produce to topic {_configuration["Kafka:TopicPayment"]}. {e.Message}" 
+                };
+            }
         }
 
-        public Task<RollbackPayment> Rollback(RollbackPayment rollback)
+        public async Task<Notification<RollbackPayment>> Rollback(RollbackPayment rollback)
         {
-            throw new System.NotImplementedException();
+            _logger.LogInformation("Receiving rollback to payment ID {}, Reason {}", rollback.IdPayment, rollback.Reason);
+            try
+            {
+                await _producerRollback.ProduceAsync(_configuration["Kafka:TopicRollback"], new Message<string, RollbackPayment>()
+                {
+                    Key = rollback.IdPayment,
+                    Value =  rollback
+                });
+
+                return new Notification<RollbackPayment>
+                {
+                    Data = rollback
+                };
+            }
+            catch (ProduceException<string,RollbackPayment> e)
+            {
+                _logger.LogError(e, "Can't produce to topic {}", _configuration["Kafka:TopicRollback"]);
+                return new Notification<RollbackPayment>
+                {
+                    Error = $"Can't produce to topic {_configuration["Kafka:TopicRollback"]}. {e.Message}" 
+                };
+            }
         }
     }
 }
