@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Producer.Kafka;
 
 namespace Producer
 {
@@ -26,6 +27,7 @@ namespace Producer
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddKafka(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
