@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <UserSecretsId>dotnet-Consumer-C0352671-2D9A-4634-9CD8-841FCA52E12D</UserSecretsId>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Confluent.Kafka" Version="1.5.2" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.9" />
+    </ItemGroup>
+</Project>
