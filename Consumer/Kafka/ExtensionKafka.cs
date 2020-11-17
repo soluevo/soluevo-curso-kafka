@@ -24,7 +24,9 @@ namespace Consumer.Kafka
                 EnableAutoCommit = Convert.ToBoolean(configuration["Kafka:EnableAutoCommit"])
             };
             
-            return new ConsumerBuilder<Ignore, string>(config).Build();
+            return new ConsumerBuilder<Ignore, string>(config)
+                .SetValueDeserializer(new AnimaJsonSerializer<string>())
+                .Build();
         }
     }
 }

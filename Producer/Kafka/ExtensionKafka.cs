@@ -23,7 +23,9 @@ namespace Producer.Kafka
                 Acks = Acks.All
             };
 
-            return new ProducerBuilder<string, RollbackPayment>(config).Build();
+            return new ProducerBuilder<string, RollbackPayment>(config)
+                .SetValueSerializer(new AnimaJsonSerializer<RollbackPayment>())
+                .Build();
         }
 
         private static IProducer<string, Payment> AddProducerPayment(IConfiguration configuration)
@@ -35,7 +37,9 @@ namespace Producer.Kafka
                 Acks = Acks.All
             };
 
-            return new ProducerBuilder<string, Payment>(config).Build();
+            return new ProducerBuilder<string, Payment>(config)
+                .SetValueSerializer(new AnimaJsonSerializer<Payment>())
+                .Build();
         }
     }
 }
