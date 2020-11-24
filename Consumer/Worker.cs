@@ -32,11 +32,8 @@ namespace Consumer
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            Task.Run(async () =>
-            {
-                var tasks = new List<Task> {ConsumePayment(stoppingToken), ConsumeRollback(stoppingToken)};
-                await Task.WhenAll(tasks);
-            }, stoppingToken);
+            Task.Run(async () => await ConsumePayment(stoppingToken), stoppingToken);
+            //Task.Run(async () => await ConsumeRollback(stoppingToken), stoppingToken);
             return Task.CompletedTask;
         }
 
@@ -51,7 +48,8 @@ namespace Consumer
                     {
                         var result = _consumerPayment.Consume(stoppingToken);
                         await _processPaymentService.ProcessPayment(result.Message.Value);
-                        _consumerPayment.Commit(result);
+                        //_consumerPayment.Commit(result);
+                        _consumerPayment.StoreOffset(result);
                         await Task.Delay(1000, stoppingToken);
                     }
                     catch (ConsumeException e)
@@ -59,6 +57,10 @@ namespace Consumer
                         _logger.LogError(e, "Error consuming");
                     }
                 }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
             }
             finally
             {

@@ -24,7 +24,8 @@ namespace Consumer.Kafka
                 GroupId = configuration["Kafka:ConsumerGroupId"],
                 ClientId = configuration["Kafka:ClientId"] + "-" + Dns.GetHostName(),
                 AutoOffsetReset = AutoOffsetReset.Earliest,
-                EnableAutoCommit = Convert.ToBoolean(configuration["Kafka:EnableAutoCommit"])
+                EnableAutoCommit = Convert.ToBoolean(configuration["Kafka:EnableAutoCommit"]),
+                EnableAutoOffsetStore = Convert.ToBoolean(configuration["Kafka:EnableAutoOffsetStore"])
             };
             
             return new ConsumerBuilder<string, Payment>(config)
