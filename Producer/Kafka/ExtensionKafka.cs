@@ -34,7 +34,9 @@ namespace Producer.Kafka
             {
                 BootstrapServers = configuration["Kafka:Servers"],
                 ClientId = configuration["Kafka:ClientId"] + "-" + Dns.GetHostName(),
-                Acks = Acks.All
+                Acks = Acks.All,
+                LingerMs = 50,
+                BatchSize = 32000 //default
             };
 
             return new ProducerBuilder<string, Payment>(config)

@@ -24,29 +24,39 @@ namespace Producer.Service
             _configuration = configuration;
         }
 
-        public async Task<Notification<Payment>> Pay(Payment payment)
+        public Task<Notification<Payment>> Pay(Payment payment)
         {
             _logger.LogInformation("Receiving payment ID {}, Value {}", payment.Id, payment.Value);
             try
             {
-                await _producerPayment.ProduceAsync(_configuration["Kafka:TopicPayment"], new Message<string, Payment>()
+                _producerPayment.Produce(_configuration["Kafka:TopicPayment"], new Message<string, Payment>()
                 {
                     Key = payment.Id,
                     Value =  payment
+                }, report =>
+                {
+                    if (report.Error.IsError)
+                    {
+                        _logger.LogError(report.Error.Reason);
+                    }
+                    else
+                    {
+                        _logger.LogInformation("Delivered with success");
+                    }
                 });
 
-                return new Notification<Payment>
+                return Task.FromResult(new Notification<Payment>
                 {
                     Data = payment
-                };
+                });
             }
             catch (ProduceException<string,Payment> e)
             {
                 _logger.LogError(e, "Can't produce to topic {}", _configuration["Kafka:TopicPayment"]);
-                return new Notification<Payment>
+                return Task.FromResult(new Notification<Payment>
                 {
-                    Error = $"Can't produce to topic {_configuration["Kafka:TopicPayment"]}. {e.Message}" 
-                };
+                    Error = $"Can't produce to topic {_configuration["Kafka:TopicPayment"]}. {e.Message}"
+                });
             }
         }
 
