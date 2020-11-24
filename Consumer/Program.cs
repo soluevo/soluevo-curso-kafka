@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Consumer.Kafka;
+using Consumer.Service;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -19,8 +20,9 @@ namespace Consumer
             Host.CreateDefaultBuilder(args)
                 .ConfigureServices((hostContext, services) =>
                 {
+                    services.AddSingleton<IProcessPaymentService, ProcessPaymentService>();
                     services.AddHostedService<Worker>();
-                    services.AddHostedService<WorkerNew>();
+                    //services.AddHostedService<WorkerNew>();
                     services.AddKafka(hostContext.Configuration);
                 });
     }
