@@ -16,20 +16,27 @@ namespace Consumer
     {
         private readonly ILogger<Worker> _logger;
         private readonly IConsumer<string, Payment> _consumerPayment;
+        private readonly IConsumer<string, RollbackPayment> _consumerRollbackPayment;
         private readonly IConfiguration _configuration;
         private readonly IProcessPaymentService _processPaymentService;
 
-        public Worker(ILogger<Worker> logger, IConsumer<string, Payment> consumerPayment, IConfiguration configuration, IProcessPaymentService processPaymentService)
+        public Worker(ILogger<Worker> logger, IConsumer<string, Payment> consumerPayment, IConfiguration configuration, 
+            IProcessPaymentService processPaymentService, IConsumer<string, RollbackPayment> consumerRollbackPayment)
         {
             _logger = logger;
             _consumerPayment = consumerPayment;
             _configuration = configuration;
             _processPaymentService = processPaymentService;
+            _consumerRollbackPayment = consumerRollbackPayment;
         }
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            Task.Run(async () => await ConsumePayment(stoppingToken), stoppingToken);
+            Task.Run(async () =>
+            {
+                var tasks = new List<Task> {ConsumePayment(stoppingToken), ConsumeRollback(stoppingToken)};
+                await Task.WhenAll(tasks);
+            }, stoppingToken);
             return Task.CompletedTask;
         }
 
@@ -56,6 +63,32 @@ namespace Consumer
             finally
             {
                 _consumerPayment.Close();    
+            }
+        }
+        
+        private async Task ConsumeRollback(CancellationToken stoppingToken)
+        {
+            _consumerRollbackPayment.Subscribe(_configuration["Kafka:TopicRollbackPayment"]);
+            try
+            {
+                while (!stoppingToken.IsCancellationRequested)
+                {
+                    try
+                    {
+                        var result = _consumerRollbackPayment.Consume(stoppingToken);
+                        await _processPaymentService.ProcessRollback(result.Message.Value);
+                        _consumerRollbackPayment.Commit(result);
+                        await Task.Delay(1000, stoppingToken);
+                    }
+                    catch (ConsumeException e)
+                    {
+                        _logger.LogError(e, "Error consuming");
+                    }
+                }
+            }
+            finally
+            {
+                _consumerRollbackPayment.Close();    
             }
         }
     }
