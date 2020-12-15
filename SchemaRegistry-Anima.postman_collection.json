@@ -1,0 +1,305 @@
+{
+	"info": {
+		"_postman_id": "2dedf4ea-19a2-494f-a248-b5c06b97c73c",
+		"name": "SchemaRegistry-Anima",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "subjects",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/subjects",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"subjects"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "configsGlobal",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/config",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"config"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "subjectsVerions",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/subjects/payment-value/versions",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"subjects",
+						"payment-value",
+						"versions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "subjectsConfigs",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/config/payment-value",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"config",
+						"payment-value"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "subjectsByVersion",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/subjects/payment-value/versions/3",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"subjects",
+						"payment-value",
+						"versions",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createSchemaInSubject",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"schema\":\r\n    \"{ \\\"type\\\": \\\"record\\\", \\\"name\\\": \\\"Payment\\\", \\\"namespace\\\": \\\"Producer.Domain\\\", \\\"fields\\\": [ { \\\"type\\\": \\\"string\\\", \\\"name\\\": \\\"Id\\\" }, { \\\"type\\\": \\\"double\\\", \\\"name\\\": \\\"Value\\\" }, { \\\"type\\\": [\\\"null\\\",\\\"string\\\"], \\\"name\\\": \\\"Description\\\" }, { \\\"type\\\": \\\"string\\\", \\\"name\\\": \\\"SourceAccount\\\" }, { \\\"type\\\": \\\"string\\\", \\\"name\\\": \\\"TargetAccount\\\" }, { \\\"type\\\": \\\"string\\\", \\\"name\\\": \\\"Obs\\\" } ] }\",\r\n  \"schemaType\": \"AVRO\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/subjects/payment-value/versions",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"subjects",
+						"payment-value",
+						"versions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "checkSchemaExistInSubject",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"schema\":\r\n    \"{ \\\"type\\\": \\\"record\\\", \\\"name\\\": \\\"test\\\", \\\"fields\\\": [ { \\\"type\\\": \\\"string\\\", \\\"name\\\": \\\"field1\\\" }, { \\\"type\\\": \\\"string\\\", \\\"name\\\": \\\"description\\\" } ] }\",\r\n  \"schemaType\": \"AVRO\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/subjects/topic-value",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"subjects",
+						"topic-value"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateSubjectCompatibility",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"compatibility\": \"FORWARD\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/config/payment-value",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"config",
+						"payment-value"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "subjectsGetSchemaByVersion",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/subjects/topic-value/versions/1/schema",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"subjects",
+						"topic-value",
+						"versions",
+						"1",
+						"schema"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteSubject",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/subjects/payment-value",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"subjects",
+						"payment-value"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "schemasById",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/schemas/ids/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"schemas",
+						"ids",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "schemasByIdVersions",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/schemas/ids/1/versions",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"schemas",
+						"ids",
+						"1",
+						"versions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "schemasType",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/schemas/types",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"schemas",
+						"types"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
