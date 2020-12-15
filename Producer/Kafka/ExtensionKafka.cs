@@ -23,7 +23,11 @@ namespace Producer.Kafka
             {
                 BootstrapServers = configuration["Kafka:Servers"],
                 ClientId = configuration["Kafka:ClientId"] + "-" + Dns.GetHostName(),
-                Acks = Acks.All
+                Acks = Acks.All,
+                SecurityProtocol =  SecurityProtocol.SaslSsl,
+                SaslMechanism = SaslMechanism.Plain,
+                SaslUsername = configuration["Kafka:Username"],
+                SaslPassword = configuration["Kafka:Password"]
             };
 
             return new ProducerBuilder<string, RollbackPayment>(config)
@@ -37,13 +41,17 @@ namespace Producer.Kafka
             {
                 BootstrapServers = configuration["Kafka:Servers"],
                 ClientId = configuration["Kafka:ClientId"] + "-" + Dns.GetHostName(),
-                Acks = Acks.All
-                //LingerMs = 50
+                Acks = Acks.All,
+                SecurityProtocol =  SecurityProtocol.SaslSsl,
+                SaslMechanism = SaslMechanism.Plain,
+                SaslUsername = configuration["Kafka:Username"],
+                SaslPassword = configuration["Kafka:Password"]
             };
 
             var schemaConfig = new SchemaRegistryConfig
             {
-                Url = configuration["SchemaRegistry:Url"]
+                Url = configuration["SchemaRegistry:Url"],
+                BasicAuthUserInfo = configuration["SchemaRegistry:UsernamePassword"]
             };
 
             var schemaRegistry = new CachedSchemaRegistryClient(schemaConfig);
