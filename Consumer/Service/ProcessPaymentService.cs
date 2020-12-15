@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using Consumer.Cross;
 using Consumer.Domain;
 using Microsoft.Extensions.Logging;
+using Producer.Domain;
 
 namespace Consumer.Service
 {

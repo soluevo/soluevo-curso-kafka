@@ -1,9 +1,13 @@
 using System;
 using System.Net;
 using Confluent.Kafka;
+using Confluent.Kafka.SyncOverAsync;
+using Confluent.SchemaRegistry;
+using Confluent.SchemaRegistry.Serdes;
 using Consumer.Domain;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Producer.Domain;
 using Producer.Kafka;
 
 namespace Consumer.Kafka
@@ -28,8 +32,14 @@ namespace Consumer.Kafka
                 EnableAutoOffsetStore = Convert.ToBoolean(configuration["Kafka:EnableAutoOffsetStore"])
             };
             
+            var schemaConfig = new SchemaRegistryConfig
+            {
+                Url = configuration["SchemaRegistry:Url"]
+            };
+
+            var schemaRegistry = new CachedSchemaRegistryClient(schemaConfig);
             return new ConsumerBuilder<string, Payment>(config)
-                .SetValueDeserializer(new AnimaJsonSerializer<Payment>())
+                .SetValueDeserializer(new AvroDeserializer<Payment>(schemaRegistry).AsSyncOverAsync())
                 .Build();
         }
         
