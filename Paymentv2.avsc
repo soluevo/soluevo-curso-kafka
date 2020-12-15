@@ -1,0 +1,14 @@
+{
+       "type": "record",
+       "name": "Payment",
+       "namespace": "Producer.Domain",
+       "fields":
+         [
+           { "type": "string",  "name": "Id"  },
+           { "type": "double",  "name": "Value" },
+           { "type": ["null","string"], "name": "Description" },
+           { "type": "string", "name": "SourceAccount" },
+           { "type": "string", "name": "TargetAccount" },
+           { "type": "string", "name": "Obs" }
+          ]
+}
