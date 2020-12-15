@@ -1,5 +1,8 @@
 using System.Net;
 using Confluent.Kafka;
+using Confluent.Kafka.SyncOverAsync;
+using Confluent.SchemaRegistry;
+using Confluent.SchemaRegistry.Serdes;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Producer.Domain;
@@ -38,8 +41,16 @@ namespace Producer.Kafka
                 //LingerMs = 50
             };
 
+            var schemaConfig = new SchemaRegistryConfig
+            {
+                Url = configuration["SchemaRegistry:Url"]
+            };
+
+            var schemaRegistry = new CachedSchemaRegistryClient(schemaConfig);
+            
             return new ProducerBuilder<string, Payment>(config)
-                .SetValueSerializer(new AnimaJsonSerializer<Payment>())
+                //.SetValueSerializer(new AnimaJsonSerializer<Payment>())
+                .SetValueSerializer(new AvroSerializer<Payment>(schemaRegistry).AsSyncOverAsync())
                 .Build();
         }
     }

@@ -29,6 +29,7 @@ namespace Producer.Service
             _logger.LogInformation("Receiving payment ID {}, Value {}", payment.Id, payment.Value);
             try
             {
+                payment.Id = Guid.NewGuid().ToString();
                 _producerPayment.Produce(_configuration["Kafka:TopicPayment"], new Message<string, Payment>()
                 {
                     Key = payment.Id,
