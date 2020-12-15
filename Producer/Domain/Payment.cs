@@ -15,12 +15,13 @@ namespace Producer.Domain
 	
 	public partial class Payment : ISpecificRecord
 	{
-		public static Schema _SCHEMA = Schema.Parse(@"{""type"":""record"",""name"":""Payment"",""namespace"":""Producer.Domain"",""fields"":[{""name"":""Id"",""type"":""string""},{""name"":""Value"",""type"":""double""},{""name"":""Description"",""type"":[""null"",""string""]},{""name"":""SourceAccount"",""type"":""string""},{""name"":""TargetAccount"",""type"":""string""}]}");
+		public static Schema _SCHEMA = Schema.Parse(@"{""type"":""record"",""name"":""Payment"",""namespace"":""Producer.Domain"",""fields"":[{""name"":""Id"",""type"":""string""},{""name"":""Value"",""type"":""double""},{""name"":""Description"",""type"":[""null"",""string""]},{""name"":""SourceAccount"",""type"":""string""},{""name"":""TargetAccount"",""type"":""string""},{""name"":""Obs"",""type"":""string""}]}");
 		private string _Id;
 		private double _Value;
 		private string _Description;
 		private string _SourceAccount;
 		private string _TargetAccount;
+		private string _Obs;
 		public virtual Schema Schema
 		{
 			get
@@ -83,6 +84,17 @@ namespace Producer.Domain
 				this._TargetAccount = value;
 			}
 		}
+		public string Obs
+		{
+			get
+			{
+				return this._Obs;
+			}
+			set
+			{
+				this._Obs = value;
+			}
+		}
 		public virtual object Get(int fieldPos)
 		{
 			switch (fieldPos)
@@ -92,6 +104,7 @@ namespace Producer.Domain
 			case 2: return this.Description;
 			case 3: return this.SourceAccount;
 			case 4: return this.TargetAccount;
+			case 5: return this.Obs;
 			default: throw new AvroRuntimeException("Bad index " + fieldPos + " in Get()");
 			};
 		}
@@ -104,6 +117,7 @@ namespace Producer.Domain
 			case 2: this.Description = (System.String)fieldValue; break;
 			case 3: this.SourceAccount = (System.String)fieldValue; break;
 			case 4: this.TargetAccount = (System.String)fieldValue; break;
+			case 5: this.Obs = (System.String)fieldValue; break;
 			default: throw new AvroRuntimeException("Bad index " + fieldPos + " in Put()");
 			};
 		}

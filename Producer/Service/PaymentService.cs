@@ -30,6 +30,7 @@ namespace Producer.Service
             try
             {
                 payment.Id = Guid.NewGuid().ToString();
+                payment.Obs = "test";
                 _producerPayment.Produce(_configuration["Kafka:TopicPayment"], new Message<string, Payment>()
                 {
                     Key = payment.Id,
